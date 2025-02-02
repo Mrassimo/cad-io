@@ -48,9 +48,9 @@ export default function Home() {
   }
 
   return (
-    <main className="flex h-screen">
+    <div className="flex h-screen w-screen overflow-hidden bg-gray-100">
       {/* CAD Viewport */}
-      <div className="flex-1 h-full">
+      <div className="flex-1 h-full relative">
         <CascadeStudio
           onSelectionChange={handleSelectionChange}
           onOperationComplete={handleOperationComplete}
@@ -58,15 +58,17 @@ export default function Home() {
       </div>
 
       {/* Chat Interface */}
-      <div className="w-96 h-full flex flex-col bg-white border-l">
+      <div className="w-96 h-full flex flex-col bg-white border-l shadow-lg">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`mb-4 ${
-                msg.role === 'assistant' ? 'bg-blue-50' : 'bg-gray-50'
-              } p-3 rounded-lg`}
+              className={`p-3 rounded-lg ${
+                msg.role === 'assistant' 
+                  ? 'bg-blue-50 ml-4' 
+                  : 'bg-gray-50 mr-4'
+              }`}
             >
               <p className="text-sm">{msg.content}</p>
             </div>
@@ -74,7 +76,7 @@ export default function Home() {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t">
+        <div className="p-4 border-t bg-white">
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -90,19 +92,19 @@ export default function Home() {
               type="text"
               name="message"
               placeholder="Type your command..."
-              className="flex-1 px-3 py-2 border rounded-lg"
+              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isProcessing}
             />
             <button
               type="submit"
               disabled={isProcessing}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Send
             </button>
           </form>
         </div>
       </div>
-    </main>
+    </div>
   )
 } 

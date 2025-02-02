@@ -1,20 +1,12 @@
-import initOpenCascade, { OpenCascadeInstance } from 'opencascade.js'
+import type { OpenCascadeInstance } from './types'
 
 let ocInstance: OpenCascadeInstance | null = null
 
 export const initializeOpenCascade = async () => {
   if (!ocInstance) {
     try {
-      // Initialize with explicit locateFile option for wasm loading
-      ocInstance = await initOpenCascade({
-        locateFile: (file: string) => {
-          if (file.endsWith('.wasm')) {
-            // Use the static path for wasm files
-            return `/static/wasm/${file}`
-          }
-          return file
-        },
-      })
+      const OpenCascade = await import('opencascade.js')
+      ocInstance = await OpenCascade.default()
       console.log('OpenCascade.js initialized successfully')
     } catch (error) {
       console.error('Failed to initialize OpenCascade.js:', error)

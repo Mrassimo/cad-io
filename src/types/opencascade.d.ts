@@ -13,6 +13,7 @@ declare module 'opencascade.js' {
 
   export interface OpenCascadeConfig {
     locateFile?: (file: string) => string;
+    wasmBinary?: ArrayBuffer;
   }
 
   const initOpenCascade: (config?: OpenCascadeConfig) => Promise<OpenCascadeInstance>;

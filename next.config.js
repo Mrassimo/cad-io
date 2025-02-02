@@ -6,36 +6,48 @@ const nextConfig = {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
-      topLevelAwait: true,
     }
 
-    // File loader for OpenCascade.js wasm files
-    config.module.rules.push({
-      test: /\.wasm$/,
-      type: "asset/resource",
-      generator: {
-        filename: 'static/wasm/[name][ext]'
-      }
-    })
-
-    // Handle OpenCascade.js fs module
     if (!isServer) {
+      // Client-side configuration
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         path: false,
         crypto: false,
       }
+
+      // Handle WASM files
+      config.module.rules.push({
+        test: /\.wasm$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/wasm/[name][ext]',
+        },
+      })
     }
 
     return config
   },
-  // Allow WASM files
-  experimental: {
-    urlImports: ['https://unpkg.com/'],
-    webAssembly: {
-      sync: true,
-    },
+  // Configure asset prefix for WASM files
+  assetPrefix: process.env.NODE_ENV === 'production' ? undefined : '',
+  // Configure headers for WASM files
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+        ],
+      },
+    ]
   },
 }
 
